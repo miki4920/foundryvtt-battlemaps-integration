@@ -1,6 +1,6 @@
 {
-  "name": "module",
-  "title": "New Module",
+  "name": "foundryvtt-battlemaps-integration",
+  "title": "Battlemap Searcher Integration",
   "description": "",
   "version": "This is auto replaced",
   "library": "false",
