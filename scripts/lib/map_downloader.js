@@ -35,8 +35,9 @@ async function upload_image(image_path, image) {
 }
 
 function set_values(image, metadata, image_path) {
-    image_path = image_path + metadata["file_name"];
+    image_path = image_path + "/" + metadata["file_name"];
     image_path = encodeURIComponent(image_path.trim());
+    console.log(image_path)
     document.getElementsByName(`img`)[0].value = image_path;
 
     let width = document.getElementsByName(`width`)[0];
@@ -49,7 +50,6 @@ function set_values(image, metadata, image_path) {
     }
 
     let grid_size = document.getElementsByName(`grid`)[0];
-    console.log(metadata["grid_size"]);
     if(metadata["grid_size"] && metadata["grid_size"] >= 50) {
         grid_size.value = metadata["grid_size"];
     }
@@ -61,7 +61,6 @@ function set_values(image, metadata, image_path) {
 
 async function create_scene() {
     const image_path = game.settings.get("foundryvtt-battlemaps-integration", "mapDirectory");
-    console.log(image_path)
     let metadata_link = document.getElementById("battlemap_fetch").value;
     if(metadata_link.length === 0) {
         ui.notifications.error(`You must provide a link to the map before fetching it`);
