@@ -23,19 +23,12 @@ function fetch_data(method, url, response_type) {
     });
 }
 
-function get_extension(file_name) {
-    let image_extension = file_name.split(".");
-    image_extension = image_extension[image_extension.length-1];
-    image_extension = ((image_extension === "jpg") ? "jpeg" : image_extension);
-    return image_extension;
-}
-
 async function upload_image(image_path, image) {
     await FilePicker.upload("data", image_path, image);
 }
 
 function set_values(image, metadata, image_path) {
-    image_path = image_path + "/" + metadata["file_name"];
+    image_path = image_path + "/" + metadata["name"] + "." + metadata["extension"];
     image_path = encodeURIComponent(image_path.trim());
     console.log(image_path)
     document.getElementsByName(`img`)[0].value = image_path;
@@ -50,13 +43,7 @@ function set_values(image, metadata, image_path) {
     }
 
     let grid_size = document.getElementsByName(`grid`)[0];
-    if(metadata["grid_size"] && metadata["grid_size"] >= 50) {
-        grid_size.value = metadata["grid_size"];
-    }
-    else if (metadata["grid_size"]) {
-        ui.notifications.error(`Grid Size of this map was smaller than 50px`);
-        grid_size.value = 0;
-    }
+    grid_size.value = 70;
 }
 
 async function create_scene() {
@@ -68,11 +55,11 @@ async function create_scene() {
     else {
         let metadata = await fetch_data("GET", metadata_link, "json");
         metadata = metadata.response;
-        let filename = metadata["file_name"];
-        let image_extension = get_extension(filename)
-        let image = await fetch_data("GET", metadata["file_link"], "blob")
+        let filename = metadata["name"];
+        let image_extension = metadata["extension"] === "jpg" ? "jpeg" : metadata["extension"]
+        let image = await fetch_data("GET", "http://" + metadata_link.split("/")[2] + "/" +metadata["path"], "blob")
         image = image.response;
-        image = new File([image], filename, {type: "image/"+image_extension});
+        image = new File([image], filename + "." + metadata["extension"], {type: "image/"+image_extension});
         await upload_image(image_path, image);
         set_values(image, metadata, image_path);
     }
