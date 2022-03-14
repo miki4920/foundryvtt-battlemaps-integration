@@ -30,17 +30,27 @@ async function upload_image(image_path, image) {
 function set_values(image, metadata, image_path) {
     image_path = image_path + "/" + metadata["name"] + "." + metadata["extension"];
     image_path = encodeURIComponent(image_path.trim());
-    console.log(image_path)
     document.getElementsByName(`img`)[0].value = image_path;
-
-    let width = document.getElementsByName(`width`)[0];
-    let height = document.getElementsByName(`height`)[0];
     let img = new Image();
     img.src = window.URL.createObjectURL(image);
     img.onload = () => {
-        width.value = img.naturalWidth;
-        height.value = img.naturalHeight;
+        let grid = document.querySelectorAll("[data-tab='grid']")[0]
+        grid.click()
+        let width = document.getElementsByName(`width`)[0];
+        let height = document.getElementsByName(`height`)[0];
+        width.value = metadata["width"];
+        height.value = metadata["height"];
+        grid = document.getElementsByName("grid")[0]
+        let grid_size = 70
+        if(metadata["square_height"] !== null && metadata["square_width"] !== null) {
+            grid_size = Math.round(metadata["width"]/metadata["square_width"])
+            while (grid_size < 50) {
+                grid_size += grid_size
+            }
+        grid.value = grid_size;
+        }
     }
+
 
     let grid_size = document.getElementsByName(`grid`)[0];
     grid_size.value = 70;
