@@ -38,6 +38,8 @@ function set_values(image, metadata, image_path) {
         grid.click()
         let width = document.getElementsByName(`width`)[0];
         let height = document.getElementsByName(`height`)[0];
+        let padding = document.getElementsByName("padding")[0];
+        padding.value = 0;
         width.value = metadata["width"];
         height.value = metadata["height"];
         grid = document.getElementsByName("grid")[0]
