@@ -30,7 +30,7 @@ async function upload_image(image_path, image) {
 function set_values(image, metadata, image_path) {
     image_path = image_path + "/" + metadata["name"] + "." + metadata["extension"];
     image_path = encodeURIComponent(image_path.trim());
-    document.getElementsByName(`img`)[0].value = image_path;
+    document.getElementsByName(`background.src`)[0].value = image_path;
     let img = new Image();
     img.src = window.URL.createObjectURL(image);
     img.onload = () => {
@@ -42,20 +42,16 @@ function set_values(image, metadata, image_path) {
         padding.value = 0;
         width.value = metadata["width"];
         height.value = metadata["height"];
-        grid = document.getElementsByName("grid")[0]
+        grid = document.getElementsByName("grid.size")[0]
         let grid_size = 70
         if(metadata["square_height"] !== null && metadata["square_width"] !== null) {
             grid_size = Math.round(metadata["width"]/metadata["square_width"])
             while (grid_size < 50) {
                 grid_size += grid_size
             }
-        grid.value = grid_size;
         }
+		grid.value = grid_size;
     }
-
-
-    let grid_size = document.getElementsByName(`grid`)[0];
-    grid_size.value = 70;
 }
 
 async function create_scene() {
@@ -69,7 +65,7 @@ async function create_scene() {
         metadata = metadata.response;
         let filename = metadata["name"];
         let image_extension = metadata["extension"] === "jpg" ? "jpeg" : metadata["extension"]
-        let image = await fetch_data("GET", "http://" + metadata_link.split("/")[2] + "/" +metadata["path"], "blob")
+        let image = await fetch_data("GET", "http://" + metadata_link.split("/")[2] + "/" +metadata["image_path"], "blob")
         image = image.response;
         image = new File([image], filename + "." + metadata["extension"], {type: "image/"+image_extension});
         await upload_image(image_path, image);
